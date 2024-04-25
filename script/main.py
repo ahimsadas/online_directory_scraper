@@ -10,7 +10,8 @@ def fetch_data(query, page):
         return response.json()
     else:
         print(f"Failed to fetch data for query {query} and page {page}")
-        return None
+        print(f"Response: {response.json()}")
+        raise Exception(f"Failed to fetch data for query {query} and page {page}. Status code: {response.status_code}")
 
 # Main function to iterate over queries and pages and save data to CSV
 def main():
@@ -29,6 +30,7 @@ def main():
                     query = chr(i) + chr(j) + chr(k)  # Generating query strings
                     page = 1
                     while True:
+                        print(f"Fetching Data for: {query} and page: {page}")
                         data = fetch_data(query, page)
                         if data and 'data' in data and 'items' in data['data']:
                             data_count = len(data['data']['items'])
@@ -42,7 +44,7 @@ def main():
                         else:
                             break
                     query_count += 1
-                    print(f"Progress: Query {query_count}/{total_queries} processed. Total data added: {total_data_count}", end='\r')
+                    print(f"Progress: Query {query_count}/{total_queries} processed. Total data added: {total_data_count}\n\n")
     print("\nData retrieval and CSV creation completed. Total data added:", total_data_count)
 
 if __name__ == "__main__":
